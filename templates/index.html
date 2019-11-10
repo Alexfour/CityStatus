@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Background photo from Graphic Burger https://graphicburger.com/5-blurred-backgrounds-vol-1/ -->
+        <meta charset="utf-8" />
+        <title>CityStatus</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body onload="update()"> 
+        <div id="fullpage">
+
+        <img src="{{ city_image }}" alt="User Image">
+        
+        <h1>{{city}}</h1>
+
+        <div id="textsummary"> <p> {{city_summary|safe}} </p> </div><br>
+        <form method="POST">
+            <input name="city"><br>
+            <input type="submit" value="Get city">
+        </form> <br>
+        <p>Total score {{city_total_score}}</p>
+        <div id="Progress_Status">
+            <div id="myprogressBar" class="progress" data-width="{{city_total_score}}" style="width:0%;"></div> 
+        </div>
+
+        <script> 
+        function update() { 
+            var width = 1; 
+            var elements = document.getElementsByClassName("progress");
+            var callfunction = setInterval(increasewidth, 10); 
+            function increasewidth() { 
+                for(var i=0; i<elements.length; i++) {
+                    if (!(parseInt(elements[i].style.width) >= parseInt(elements[i].dataset.width,10))) { 
+                        width = parseInt(elements[i].style.width) + 1;
+                        elements[i].style.width = width + '%';  
+                    } 
+                }
+            }
+        } 
+        </script> 
+        <br>
+        
+        <br>
+        <div class="row">
+            <div class="column">
+                {%for i in range(0, 9)%} 
+                    <p> {{categories[i]}} : {{scores[i]}}</p>
+                    <div id="Progress_Status">
+                    <div id="myprogressBar" class="progress" data-width="{{scores[i]*10}}" style="width:0%;"></div> 
+                        <!--<div id="myprogressBar" data-width="{{scores[i]*10}}" class="progress" style="width:{{scores[i]*10}}%;background-color: #4CAF50; "></div> !-->
+                    </div>
+                {%endfor%} 
+            </div>
+            <div class="column">
+                {%for i in range(9, len)%} 
+                    <p> {{categories[i]}} : {{scores[i]}}</p>
+                    <div id="Progress_Status">
+                        <div id="myprogressBar" class="progress" data-width="{{scores[i]*10}}" style="width:0%;"></div> 
+                    </div>
+                {%endfor%} 
+                    <p> Corruption : {{100-city_corruption}}</p>
+                    <div id="Progress_Status">
+                        <div id="myprogressBar" class="progress" data-width="{{100-city_corruption}}" style="width:0%;"></div> 
+                    </div>
+                    
+            </div>
+        </div>
+        <br>
+        </div>
+    </body>
+</html>
